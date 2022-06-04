@@ -1,5 +1,6 @@
 #include <LedControl.h>
 #include "numeros.h"
+#include "letras.h"
 
 //// MOdificado
 
@@ -75,33 +76,13 @@ void loop() {
 if (analogRead(btnStart) == 0) {
       //imprimir_conteo();
      // imprimir_sindriver_conteo();
-      for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = m0[columna][fila]; }}
-       condriver();
-delay(500);
-
-     for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = mm0[columna][fila]; }}
-       condriver();
-delay(500);
-
-     for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = m0[columna][fila]; }}
-       sindriver();
-delay(500);
-     for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = m0[columna][fila]; }}
-       sindriver();
-delay(500);
-
+//      for (int fila = 0; fila < 8; fila++) {
+//    digitalWrite(filas[fila], HIGH);
+//    for (int columna = 0; columna < 8; columna++) {
+//       molde[columna][fila] = p1[columna][fila]; }}
+//       condriver();
+//delay(500);
+mostrarTexto_AbajoArriba();
     
     
     
@@ -146,8 +127,197 @@ void paso() {
   for (int fila = 0; fila < 8; fila++) {
     digitalWrite(filas[fila], HIGH);
     for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = m0[columna][fila];
+       molde[columna][fila] = p1[columna][fila];
         //lc.setLed(0, fila, columna, n1[columna][fila]);
     }
+  }
+}
+
+
+
+void mostrarTexto_AbajoArriba() {
+
+  if (estado == 0) {
+    //mostrarCaracter(ASTERISCO);
+    mostrarCaracterDriver(ESPACIO);
+    mostrarCaracter(ASTERISCO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 20; // reseteando los estados (esto para que cuando el texto termine, se vuelva a mostrar el mismo texto desde el inicio)
+  } else if (estado == 1) {
+    mostrarCaracterDriver(ASTERISCO);
+    mostrarCaracter(P);
+    delay(del);
+    LimpiarMatriz();
+    estado = 0;
+  } else if (estado == 2) {
+    mostrarCaracterDriver(P);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 1;
+  } else if (estado == 3) {
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(GUION);
+    delay(del);
+    LimpiarMatriz();
+    estado = 2;
+  } else if (estado == 4) {
+    mostrarCaracterDriver(GUION);
+    mostrarCaracter(G);
+    delay(del);
+    LimpiarMatriz();
+    estado = 3;
+  } else if (estado == 5) {
+    mostrarCaracterDriver(G);
+    mostrarCaracter(R);
+    delay(del);
+    LimpiarMatriz();
+    estado = 4;
+  } else if (estado == 6) {
+    mostrarCaracterDriver(R);
+    mostrarCaracter(U);
+    delay(del);
+    LimpiarMatriz();
+    estado = 5;
+  } else if (estado == 7) {
+    mostrarCaracterDriver(U);
+    mostrarCaracter(P);
+    delay(del);
+    LimpiarMatriz();
+    estado = 6;
+  } else if (estado == 8) {
+    mostrarCaracterDriver(P);
+    mostrarCaracter(O);
+    delay(del);
+    LimpiarMatriz();
+    estado = 7;
+  } else if (estado == 9) {
+    mostrarCaracterDriver(O);
+    mostrarCaracter(CUATRO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 8;
+  } else if (estado == 10) {
+    mostrarCaracterDriver(CUATRO);
+    mostrarCaracter(GUION);
+    delay(del);
+    LimpiarMatriz();
+    estado = 9;
+  } else if (estado == 11) {
+    mostrarCaracterDriver(GUION);
+    mostrarCaracter(S);
+    delay(del);
+    LimpiarMatriz();
+    estado = 10;
+  } else if (estado == 12) {
+    mostrarCaracterDriver(S);
+    mostrarCaracter(E);
+    delay(del);
+    LimpiarMatriz();
+    estado = 11;
+  } else if (estado == 13) {
+    mostrarCaracterDriver(E);
+    mostrarCaracter(C);
+    delay(del);
+    LimpiarMatriz();
+    estado = 12;
+  } else if (estado == 14) {
+    mostrarCaracterDriver(C);
+    mostrarCaracter(C);
+    delay(del);
+    LimpiarMatriz();
+    estado = 13;
+  } else if (estado == 15) {
+    mostrarCaracterDriver(C);
+    mostrarCaracter(I);
+    delay(del);
+    LimpiarMatriz();
+    estado = 14;
+  } else if (estado == 16) {
+    estado = 15;
+    mostrarCaracterDriver(I);
+    mostrarCaracter(O);
+    delay(del);
+    LimpiarMatriz();
+  } else if (estado == 17) {
+    estado = 16;
+    mostrarCaracterDriver(O);
+    mostrarCaracter(N);
+    delay(del);
+    LimpiarMatriz();
+  } else if (estado == 18) {
+    mostrarCaracterDriver(N);
+    mostrarCaracter(B);
+    delay(del);
+    LimpiarMatriz();
+    estado = 17;
+  } else if (estado == 19) {
+    mostrarCaracterDriver(B);
+    mostrarCaracter(ASTERISCO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 18;
+  } else if (estado == 20) {
+    mostrarCaracterDriver(ASTERISCO);
+    mostrarCaracter(ESPACIO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 19; // reseteando los estados
+  }
+}
+
+
+
+void LimpiarMatriz() {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(fil[i], HIGH);
+    digitalWrite(col[i], LOW);
+  }
+}
+
+
+
+
+void mostrarCaracter(int letra[8][8]) {
+  //int fil_aux=0;
+  int col_aux = 7;
+  for (int repe = 0; repe < 30; repe++) {
+    for (int i = 0; i < 8; i++) {
+      //digitalWrite(fil[i],LOW);
+      digitalWrite(col[i], HIGH);
+      for (int j = 0; j < 8; j++) {
+        if (letra[i][j] == 1) {
+          //digitalWrite(fil[j], HIGH);
+          digitalWrite(fil[col_aux], LOW);
+        }
+        col_aux--;
+      }
+      col_aux = 7;
+      delay(2);
+      //digitalWrite(fil[i],HIGH);
+      digitalWrite(col[i], LOW);
+      for (int j = 0; j < 8; j++) {
+        //digitalWrite(col[j],LOW);
+        digitalWrite(fil[j], HIGH);
+      }
+    }
+  }
+}
+
+
+
+
+
+void mostrarCaracterDriver(int letra[8][8]) {
+  int fil_aux = 0;
+  int col_aux = 7;
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      lc.setLed(0, fil_aux, col_aux, letra[i][j]);
+      fil_aux++;
+    }
+    fil_aux = 0;
+    col_aux--;
   }
 }
