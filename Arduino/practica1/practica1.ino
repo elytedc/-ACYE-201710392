@@ -1,8 +1,10 @@
 #include <LedControl.h>
+#include "numeros.h"
 
 //// MOdificado
 
 LedControl lc = LedControl(51, 52, 53, 1);
+
 // Inicio variables para texto --- Agregado Gerson --------------------------------------------------------
 int fil[] = {22, 23, 24, 25, 26, 27, 28, 29}; // Filas
 int col[] = {32, 33, 34, 35, 36, 37, 38, 39}; // Columnas
@@ -70,8 +72,82 @@ Serial.begin(9600);
 }
 
 void loop() {
+if (analogRead(btnStart) == 0) {
+      //imprimir_conteo();
+     // imprimir_sindriver_conteo();
+      for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       molde[columna][fila] = m0[columna][fila]; }}
+       condriver();
+delay(500);
+
+     for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       molde[columna][fila] = mm0[columna][fila]; }}
+       condriver();
+delay(500);
+
+     for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       molde[columna][fila] = m0[columna][fila]; }}
+       sindriver();
+delay(500);
+     for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       molde[columna][fila] = m0[columna][fila]; }}
+       sindriver();
+delay(500);
+
+    
+    
+    
+    } 
+
+
+
+}
 
 
 
 
+void sindriver() {
+  for (int columna = 0; columna < 8; columna++) {
+    //digitalWrite(filas[columna],HIGH);
+    for (int fila = 0; fila < 8; fila++) {
+      if (molde[columna][fila] == 1) {
+        digitalWrite(columnas[fila], LOW);
+      }
+    }
+    delay(4);
+    digitalWrite(filas[columna], LOW);
+    for (int j = 0; j < 8; j++) {
+      digitalWrite(columnas[j], HIGH);
+    }
+  }
+}
+
+
+void condriver() {
+  for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       // molde[columna][fila] = m0[columna][fila];
+        lc.setLed(0, fila, columna, molde[columna][fila]);
+    }
+  }
+}
+
+
+void paso() {
+  for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+       molde[columna][fila] = m0[columna][fila];
+        //lc.setLed(0, fila, columna, n1[columna][fila]);
+    }
+  }
 }
