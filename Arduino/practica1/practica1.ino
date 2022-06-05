@@ -139,133 +139,326 @@ void mostrarTexto_AbajoArriba() {
 
   if (estado == 0) {
     //mostrarCaracter(ASTERISCO);
-    mostrarCaracterDriver(ESPACIO);
-    mostrarCaracter(ASTERISCO);
-    delay(del);
-    LimpiarMatriz();
-    estado = 20; // reseteando los estados (esto para que cuando el texto termine, se vuelva a mostrar el mismo texto desde el inicio)
-  } else if (estado == 1) {
-    mostrarCaracterDriver(ASTERISCO);
-    mostrarCaracter(P);
-    delay(del);
-    LimpiarMatriz();
-    estado = 0;
-  } else if (estado == 2) {
-    mostrarCaracterDriver(P);
-    mostrarCaracter(UNO);
-    delay(del);
-    LimpiarMatriz();
-    estado = 1;
-  } else if (estado == 3) {
-    mostrarCaracterDriver(UNO);
-    mostrarCaracter(GUION);
-    delay(del);
-    LimpiarMatriz();
-    estado = 2;
-  } else if (estado == 4) {
-    mostrarCaracterDriver(GUION);
-    mostrarCaracter(G);
-    delay(del);
-    LimpiarMatriz();
-    estado = 3;
-  } else if (estado == 5) {
-    mostrarCaracterDriver(G);
-    mostrarCaracter(R);
-    delay(del);
-    LimpiarMatriz();
-    estado = 4;
-  } else if (estado == 6) {
-    mostrarCaracterDriver(R);
-    mostrarCaracter(U);
-    delay(del);
-    LimpiarMatriz();
-    estado = 5;
-  } else if (estado == 7) {
-    mostrarCaracterDriver(U);
-    mostrarCaracter(P);
-    delay(del);
-    LimpiarMatriz();
-    estado = 6;
-  } else if (estado == 8) {
-    mostrarCaracterDriver(P);
-    mostrarCaracter(O);
-    delay(del);
-    LimpiarMatriz();
-    estado = 7;
-  } else if (estado == 9) {
-    mostrarCaracterDriver(O);
-    mostrarCaracter(CUATRO);
-    delay(del);
-    LimpiarMatriz();
-    estado = 8;
-  } else if (estado == 10) {
-    mostrarCaracterDriver(CUATRO);
-    mostrarCaracter(GUION);
-    delay(del);
-    LimpiarMatriz();
-    estado = 9;
-  } else if (estado == 11) {
-    mostrarCaracterDriver(GUION);
-    mostrarCaracter(S);
-    delay(del);
-    LimpiarMatriz();
-    estado = 10;
-  } else if (estado == 12) {
-    mostrarCaracterDriver(S);
-    mostrarCaracter(E);
-    delay(del);
-    LimpiarMatriz();
-    estado = 11;
-  } else if (estado == 13) {
-    mostrarCaracterDriver(E);
-    mostrarCaracter(C);
-    delay(del);
-    LimpiarMatriz();
-    estado = 12;
-  } else if (estado == 14) {
-    mostrarCaracterDriver(C);
-    mostrarCaracter(C);
-    delay(del);
-    LimpiarMatriz();
-    estado = 13;
-  } else if (estado == 15) {
-    mostrarCaracterDriver(C);
-    mostrarCaracter(I);
-    delay(del);
-    LimpiarMatriz();
-    estado = 14;
-  } else if (estado == 16) {
-    estado = 15;
-    mostrarCaracterDriver(I);
-    mostrarCaracter(O);
-    delay(del);
-    LimpiarMatriz();
-  } else if (estado == 17) {
-    estado = 16;
-    mostrarCaracterDriver(O);
-    mostrarCaracter(N);
-    delay(del);
-    LimpiarMatriz();
-  } else if (estado == 18) {
-    mostrarCaracterDriver(N);
-    mostrarCaracter(B);
-    delay(del);
-    LimpiarMatriz();
-    estado = 17;
-  } else if (estado == 19) {
-    mostrarCaracterDriver(B);
-    mostrarCaracter(ASTERISCO);
-    delay(del);
-    LimpiarMatriz();
-    estado = 18;
-  } else if (estado == 20) {
-    mostrarCaracterDriver(ASTERISCO);
+    
+    mostrarCaracterDriver(P1);
     mostrarCaracter(ESPACIO);
     delay(del);
     LimpiarMatriz();
-    estado = 19; // reseteando los estados
+    estado = 1; // reseteando los estados (esto para que cuando el texto termine, se vuelva a mostrar el mismo texto desde el inicio)
+  } else if (estado == 1) {
+    
+    mostrarCaracterDriver(P2);
+    mostrarCaracter(ESPACIO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 2;
+  } else if (estado == 2) {
+    
+    mostrarCaracterDriver(PR);
+    mostrarCaracter(P1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 3;
   }
+  else if (estado == 3) {
+    
+    mostrarCaracterDriver(R1);
+    mostrarCaracter(P2);
+    delay(del);
+    LimpiarMatriz();
+    estado = 4;
+  }  
+
+  else if (estado == 4) {
+    
+    mostrarCaracterDriver(RA);
+    mostrarCaracter(PR);
+    delay(del);
+    LimpiarMatriz();
+    estado = 5;
+  } 
+else if (estado == 5) {
+    
+    mostrarCaracterDriver(AA1);
+    mostrarCaracter(R1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 6;
+  } 
+  else if (estado == 6) {
+    
+    mostrarCaracterDriver(AC);
+    mostrarCaracter(RA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 7;
+  }
+
+  else if (estado == 7) {
+    
+    mostrarCaracterDriver(C1);
+    mostrarCaracter(AA1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 8;
+  }
+  else if (estado == 8) {
+    
+    mostrarCaracterDriver(CT);
+    mostrarCaracter(AC);
+    delay(del);
+    LimpiarMatriz();
+    estado = 9;
+  }
+
+else if (estado == 9) {
+    
+    mostrarCaracterDriver(T1);
+    mostrarCaracter(C1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 10;
+  }
+
+
+  else if (estado == 10) {
+    
+    mostrarCaracterDriver(TI);
+    mostrarCaracter(CT);
+    delay(del);
+    LimpiarMatriz();
+    estado = 11;
+  }
+
+else if (estado == 11) {
+    
+    mostrarCaracterDriver(I1);
+    mostrarCaracter(T1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 12;
+  }
+
+
+else if (estado == 12) {
+    
+    mostrarCaracterDriver(IC);
+    mostrarCaracter(TI);
+    delay(del);
+    LimpiarMatriz();
+    estado = 13;
+  }
+
+
+  else if (estado == 13) {
+    
+    mostrarCaracterDriver(C1);
+    mostrarCaracter(I1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 14;
+  }
+
+  else if (estado == 14) {
+    
+    mostrarCaracterDriver(CA);
+    mostrarCaracter(IC);
+    delay(del);
+    LimpiarMatriz();
+    estado = 15;
+  }
+  else if (estado == 15) {
+    
+    mostrarCaracterDriver(AA1);
+    mostrarCaracter(C1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 16;
+  }
+
+else if (estado == 16) {
+    
+    mostrarCaracterDriver(AUNO);
+    mostrarCaracter(CA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 17;
+  }
+
+else if (estado == 17) {
+    
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(AA1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 18;
+  }
+
+else if (estado == 18) {
+    
+    mostrarCaracterDriver(UNODIA);
+    mostrarCaracter(AUNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 19;
+  }
+
+else if (estado == 19) {
+    mostrarCaracterDriver(DIA);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 20;
+  }
+
+else if (estado == 20) {//7777777777777777777777777777777777777777777777
+    mostrarCaracterDriver(DOS);
+    mostrarCaracter(DIA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 21;
+  }
+
+else if (estado == 21) {
+    mostrarCaracterDriver(DOSCERO);
+    mostrarCaracter(CABEZADOS);
+    delay(del);
+    LimpiarMatriz();
+    estado = 22;
+  }
+
+  else if (estado == 22) {
+    mostrarCaracterDriver(CERO);
+    mostrarCaracter(DOS);
+    delay(del);
+    LimpiarMatriz();
+    estado = 23;
+  }
+
+  else if (estado == 23) {
+    mostrarCaracterDriver(CERO1);
+    mostrarCaracter(DOSCERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 24;
+  }
+
+  else if (estado == 24) {
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(DOS);
+    delay(del);
+    LimpiarMatriz();
+    estado = 25;
+  }
+
+  else if (estado == 25) {
+    mostrarCaracterDriver(UNO7);
+    mostrarCaracter(CERO1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 26;
+  }
+
+  else if (estado == 26) {
+    mostrarCaracterDriver(SIETE);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 27;
+  }
+
+  else if (estado == 27) { 
+    mostrarCaracterDriver(SIETE1);
+    mostrarCaracter(UNO7);
+    delay(del);
+    LimpiarMatriz();
+    estado = 28;
+  }
+///AQUI
+else if (estado == 28) { 
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(SIETE);
+    delay(del);
+    LimpiarMatriz();
+    estado = 29;
+  }
+
+else if (estado == 29) { 
+    mostrarCaracterDriver(UNOCERO);
+    mostrarCaracter(SIETE1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 30;
+  }
+
+  else if (estado == 30) { 
+    mostrarCaracterDriver(CERO);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 31;
+  }
+
+  else if (estado == 31) { 
+    mostrarCaracterDriver(CERO2);
+    mostrarCaracter(UNOCERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 32;
+  }
+
+
+  else if (estado == 32) { 
+    mostrarCaracterDriver(TRES);
+    mostrarCaracter(CERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 33;
+  }
+
+
+  else if (estado == 33) { 
+    mostrarCaracterDriver(TRES9);
+    mostrarCaracter(CERO2);
+    delay(del);
+    LimpiarMatriz();
+    estado = 34;
+  }
+
+  else if (estado == 34) { 
+    mostrarCaracterDriver(NUEVE);
+    mostrarCaracter(TRES);
+    delay(del);
+    LimpiarMatriz();
+    estado = 35;
+  }
+
+
+  else if (estado == 35) { 
+    mostrarCaracterDriver(NUEVE2);
+    mostrarCaracter(TRES9);
+    delay(del);
+    LimpiarMatriz();
+    estado = 36;
+  }
+
+
+  else if (estado == 36) { 
+    mostrarCaracterDriver(DOS);
+    mostrarCaracter(NUEVE);
+    delay(del);
+    LimpiarMatriz();
+    estado = 0;
+  }
+
+  
+  
 }
+
+
+
+
+
 
 
 
