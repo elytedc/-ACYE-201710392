@@ -19,8 +19,8 @@ int boton; // guarda el estado del switch (presionado o no)
 int del;   // guarda el valor del potenciomatro para hacer que el texto se traslade rapido/lento (delay)
 // Fin variables para texto -----------------------------------------------------------
 bool pausa = false;
-int unidad = 0;
-int decena = 0;
+int unidad = 5;
+int decena = 5;
 int columnas[] = {22, 23, 24, 25, 26, 27, 28, 29};
 int filas[] = {32, 33, 34, 35, 36, 37, 38, 39};
 
@@ -82,9 +82,9 @@ bool Nave::puedeMovDer() {
 
 
 bool Nave::estaTocandoCoordenadas(int x, int y) {
-  bool estaTocandoLadoDer = ((x == coordX + 1) && (y == 0));
-  bool estaTocandoLadoIzq = ((x == coordX - 1) && (y == 0));
-  bool estaTocandoLadoFrontal = ((x == coordX) && (y == 1));
+  bool estaTocandoLadoDer = ((x == coordX + 1) && (y == 3));
+  bool estaTocandoLadoIzq = ((x == coordX - 1) && (y == 3));
+  bool estaTocandoLadoFrontal = ((x == coordX) && (y == 3));
   return (estaTocandoLadoDer || estaTocandoLadoIzq  || estaTocandoLadoFrontal);
 }
 
@@ -139,14 +139,14 @@ void crearEnemigo() {
     if (!enemigosOcupanEspacio[idEnemigo]) {
       if (idEnemigo != 0) {
         if (enemigosVivos[idEnemigo - 1].coordY < 12) {
-          if (millis()-contabilidad>=5000) {
-            enemigosOcupanEspacio[idEnemigo] = true;
-            contabilidad=0;
-            contabilidad = millis();
-            enemigosVivos[idEnemigo] = enemigo;
-          }
-          
-          
+//          if (millis()-contabilidad>=5000) {
+//            enemigosOcupanEspacio[idEnemigo] = true;
+//            contabilidad=0;
+//            contabilidad = millis();
+//            enemigosVivos[idEnemigo] = enemigo;
+//          }
+          enemigosOcupanEspacio[idEnemigo] = false;
+          enemigosVivos[idEnemigo] = enemigo;
         }
       } else {
         enemigosOcupanEspacio[idEnemigo] = true;
@@ -220,6 +220,7 @@ void dibujarEnemigos() {
           } else {
             if (enemigo.coordY == -2) {
               cuadriculaActual[15] = cuadriculaActual[15] | (B11100000 >> enemigo.coordX - 1); // es tope del tablero---
+                    
             } else {
               cuadriculaActual[13 - enemigo.coordY] = cuadriculaActual[13 - enemigo.coordY] | (B11100000 >> enemigo.coordX - 1);
               cuadriculaActual[14 - enemigo.coordY] = cuadriculaActual[14 - enemigo.coordY] | (B01000000 >> enemigo.coordX - 1);
@@ -302,8 +303,8 @@ void loop() {
   if (!GAME_OVER) {
     // PAUSA 
     if (analogRead(btnStart) == 0) {
-      //imprimir_conteo();
-      //imprimir_sindriver_conteo();
+      imprimir_conteo();
+      imprimir_sindriver_conteo();
       esta=0;
     } else {
       if (nave.puedeMovIzq()) {
@@ -338,11 +339,11 @@ void loop() {
       actualizarVelEnemigo();
 
       memcpy(cuadriculaActual, cuadriculaLimpia, 16);
-
+      
       dibujarNave(nave.coordX);
       dibujarEnemigos();
       dibujarCuadricula(cuadriculaActual);
-      //verificarEnemigoTocaNave();
+      verificarEnemigoTocaNave();
       //verificarProyectilTocaEnemigo();
     }
   } else {
@@ -1056,4 +1057,105 @@ void mostrarCaracterDriver(int letras[8][8]) {
     fil_aux = 0;
     col_aux--;
   }
+}
+
+
+void imprimir_sindriver_conteo() {
+  for (int columna = 0; columna < 8; columna++) {
+    //digitalWrite(filas[columna],HIGH);
+    for (int fila = 0; fila < 8; fila++) {
+      if (molde[columna][fila] == 1) {
+        digitalWrite(columnas[fila], LOW);
+      }
+    }
+    delay(4);
+    digitalWrite(filas[columna], LOW);
+    for (int j = 0; j < 8; j++) {
+      digitalWrite(columnas[j], HIGH);
+    }
+  }
+}
+
+
+void imprimir_conteo() {
+  for (int fila = 0; fila < 8; fila++) {
+    digitalWrite(filas[fila], HIGH);
+    for (int columna = 0; columna < 8; columna++) {
+      if (decena == 1) {
+        molde[columna][fila] = m1[columna][fila];
+      }
+
+      if (decena == 2) {
+        molde[columna][fila] = m2[columna][fila];
+      }
+
+      if (decena == 3) {
+        molde[columna][fila] = m3[columna][fila];
+      }
+      if (decena == 4) {
+        molde[columna][fila] = m4[columna][fila];
+      }
+
+      if (decena == 5) {
+        molde[columna][fila] = m5[columna][fila];
+      }
+
+      if (decena == 6) {
+        molde[columna][fila] = m6[columna][fila];
+      }
+
+      if (decena == 7) {
+        molde[columna][fila] = m7[columna][fila];
+      }
+
+      if (decena == 8) {
+        molde[columna][fila] = m8[columna][fila];
+      }
+
+      if (decena == 9) {
+        molde[columna][fila] = m9[columna][fila];
+      }
+
+      if (decena == 0) {
+        molde[columna][fila] = m0[columna][fila];
+      }
+
+      if (unidad == 0) {
+        lc.setLed(0, fila, columna, n0[columna][fila]);
+      }
+      if (unidad == 1) {
+        lc.setLed(0, fila, columna, n1[columna][fila]);
+      }
+      if (unidad == 2) {
+        lc.setLed(0, fila, columna, n2[columna][fila]);
+      }
+      if (unidad == 3) {
+        lc.setLed(0, fila, columna, n3[columna][fila]);
+      }
+      if (unidad == 4) {
+        lc.setLed(0, fila, columna, n4[columna][fila]);
+      }
+      if (unidad == 5) {
+        lc.setLed(0, fila, columna, n5[columna][fila]);
+      }
+      if (unidad == 6) {
+        lc.setLed(0, fila, columna, n6[columna][fila]);
+      }
+      if (unidad == 7) {
+        lc.setLed(0, fila, columna, n7[columna][fila]);
+      }
+      if (unidad == 8) {
+        lc.setLed(0, fila, columna, n8[columna][fila]);
+      }
+      if (unidad == 9) {
+        lc.setLed(0, fila, columna, n9[columna][fila]);
+      }
+    }
+  }
+
+
+
+
+
+
 }
