@@ -13,7 +13,7 @@ int col[] = {32, 33, 34, 35, 36, 37, 38, 39}; // Columnas
 int pot = A4; // Lee el potenciometro
 int pot2 = A5; // Lee el potenciometro para el juego
 int switchPresionado = 47; // Lee el switch
-int estado = 0;
+int estado = 36;
 int boton; // guarda el estado del switch (presionado o no)
 int del;   // guarda el valor del potenciomatro para hacer que el texto se traslade rapido/lento (delay)
 // Fin variables para texto -----------------------------------------------------------
@@ -73,69 +73,21 @@ Serial.begin(9600);
 }
 
 void loop() {
-if (analogRead(btnStart) == 0) {
-      //imprimir_conteo();
-     // imprimir_sindriver_conteo();
-//      for (int fila = 0; fila < 8; fila++) {
-//    digitalWrite(filas[fila], HIGH);
-//    for (int columna = 0; columna < 8; columna++) {
-//       molde[columna][fila] = p1[columna][fila]; }}
-//       condriver();
-//delay(500);
-mostrarTexto_AbajoArriba();
-    
-    
-    
-    } 
+
+DES();
 
 
+}
 
+bool estaPresionado(int idBtn) {
+  int estadoBtn = digitalRead(idBtn);
+  return (estadoBtn == HIGH);
 }
 
 
 
 
-void sindriver() {
-  for (int columna = 0; columna < 8; columna++) {
-    //digitalWrite(filas[columna],HIGH);
-    for (int fila = 0; fila < 8; fila++) {
-      if (molde[columna][fila] == 1) {
-        digitalWrite(columnas[fila], LOW);
-      }
-    }
-    delay(4);
-    digitalWrite(filas[columna], LOW);
-    for (int j = 0; j < 8; j++) {
-      digitalWrite(columnas[j], HIGH);
-    }
-  }
-}
-
-
-void condriver() {
-  for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       // molde[columna][fila] = m0[columna][fila];
-        lc.setLed(0, fila, columna, molde[columna][fila]);
-    }
-  }
-}
-
-
-void paso() {
-  for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-       molde[columna][fila] = p1[columna][fila];
-        //lc.setLed(0, fila, columna, n1[columna][fila]);
-    }
-  }
-}
-
-
-
-void mostrarTexto_AbajoArriba() {
+void ASC() {
 
   if (estado == 0) {
     //mostrarCaracter(ASTERISCO);
@@ -456,6 +408,312 @@ else if (estado == 29) {
 }
 
 
+
+void DES() {
+
+  if (estado == 36) {
+    mostrarCaracterDriver(ESPACIO);
+    mostrarCaracter(DOS);
+    delay(del);
+    LimpiarMatriz();
+    estado = 35; 
+  }
+if (estado == 35) {
+    mostrarCaracterDriver(FINALDOS);
+    mostrarCaracter(NUEVE2);
+    delay(del);
+    LimpiarMatriz();
+    estado = 34; 
+  }
+
+  else if (estado == 34) { 
+    mostrarCaracterDriver(DOS);
+    mostrarCaracter(NUEVE);
+    delay(del);
+    LimpiarMatriz();
+    estado = 33;
+  }
+
+else if (estado == 33) { 
+    mostrarCaracterDriver(NUEVE2);
+    mostrarCaracter(TRES9);
+    delay(del);
+    LimpiarMatriz();
+    estado = 32;
+  }
+
+else if (estado == 32) { 
+    mostrarCaracterDriver(NUEVE);
+    mostrarCaracter(TRES);
+    delay(del);
+    LimpiarMatriz();
+    estado = 31;
+  }//////////////////////////////////////
+else if (estado == 31) { 
+    mostrarCaracterDriver(TRES9);
+    mostrarCaracter(CERO2);
+    delay(del);
+    LimpiarMatriz();
+    estado = 30;
+  }
+
+  else if (estado == 30) { 
+    mostrarCaracterDriver(TRES);
+    mostrarCaracter(CERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 29;
+  }
+
+  else if (estado == 29) { 
+    mostrarCaracterDriver(CERO2);
+    mostrarCaracter(UNOCERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 28;
+  }
+
+  else if (estado == 28) { 
+    mostrarCaracterDriver(CERO);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 27;
+  }
+
+  else if (estado == 27) { 
+    mostrarCaracterDriver(UNOCERO);
+    mostrarCaracter(SIETE1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 26;
+  }
+
+  else if (estado == 26) { 
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(SIETE);
+    delay(del);
+    LimpiarMatriz();
+    estado = 25;
+  }
+        
+else if (estado == 26) { 
+    mostrarCaracterDriver(SIETE1);
+    mostrarCaracter(UNO7);
+    delay(del);
+    LimpiarMatriz();
+    estado = 25;
+  }
+  
+else if (estado == 25) { 
+    mostrarCaracterDriver(SIETE);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 24;
+  }
+
+  else if (estado == 24) { 
+    mostrarCaracterDriver(UNO7);
+    mostrarCaracter(CERO1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 23;
+  }
+
+  else if (estado == 23) { 
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(CERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 22;
+  }
+
+  else if (estado == 22) { 
+    mostrarCaracterDriver(CERO1);
+    mostrarCaracter(DOSCERO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 21;
+  }
+
+  else if (estado == 21) { 
+    mostrarCaracterDriver(CERO);
+    mostrarCaracter(DOS);
+    delay(del);
+    LimpiarMatriz();
+    estado = 20;
+  }
+
+  else if (estado == 20) { 
+    mostrarCaracterDriver(DOS);
+    mostrarCaracter(DIA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 19;
+  }
+
+  else if (estado == 19) { 
+    mostrarCaracterDriver(CABEZADOS);
+    mostrarCaracter(UNODIA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 18;
+  }
+
+  else if (estado == 18) { 
+    mostrarCaracterDriver(DIA);
+    mostrarCaracter(UNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 17;
+  }
+
+  else if (estado == 17) { 
+    mostrarCaracterDriver(UNODIA);
+    mostrarCaracter(AUNO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 16;
+  }
+
+  else if (estado == 16) { 
+    mostrarCaracterDriver(UNO);
+    mostrarCaracter(AA1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 15;
+  }
+
+else if (estado == 15) { 
+    mostrarCaracterDriver(AUNO);
+    mostrarCaracter(CA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 14;
+  }
+
+  else if (estado == 14) { 
+    mostrarCaracterDriver(AA1);
+    mostrarCaracter(C1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 13;
+  }
+
+  else if (estado == 13) { 
+    mostrarCaracterDriver(CA);
+    mostrarCaracter(IC);
+    delay(del);
+    LimpiarMatriz();
+    estado = 12;
+  }
+
+  else if (estado == 12) { 
+    mostrarCaracterDriver(C1);
+    mostrarCaracter(I1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 11;
+  }
+
+  else if (estado == 11) { 
+    mostrarCaracterDriver(IC);
+    mostrarCaracter(TI);
+    delay(del);
+    LimpiarMatriz();
+    estado = 10;
+  }
+
+  else if (estado == 10) { 
+    mostrarCaracterDriver(I1);
+    mostrarCaracter(T1);
+    delay(del);
+    LimpiarMatriz();
+    estado =9;
+  }
+
+  else if (estado == 9) { 
+    mostrarCaracterDriver(TI);
+    mostrarCaracter(CT);
+    delay(del);
+    LimpiarMatriz();
+    estado = 8;
+  }
+
+  else if (estado == 8) { 
+    mostrarCaracterDriver(T1);
+    mostrarCaracter(C1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 7;
+  }
+
+  else if (estado == 7) { 
+    mostrarCaracterDriver(CT);
+    mostrarCaracter(AC);
+    delay(del);
+    LimpiarMatriz();
+    estado = 6;
+  }
+
+  else if (estado == 6) { 
+    mostrarCaracterDriver(C1);
+    mostrarCaracter(AA1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 5;
+  }
+
+else if (estado == 5) { 
+    mostrarCaracterDriver(AC);
+    mostrarCaracter(RA);
+    delay(del);
+    LimpiarMatriz();
+    estado = 4;
+  }
+
+  else if (estado == 4) { 
+    mostrarCaracterDriver(AA1);
+    mostrarCaracter(R1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 3;
+  }
+
+  else if (estado == 3) { 
+    mostrarCaracterDriver(RA);
+    mostrarCaracter(PR);
+    delay(del);
+    LimpiarMatriz();
+    estado = 2;
+  }
+
+  else if (estado == 2) { 
+    mostrarCaracterDriver(R1);
+    mostrarCaracter(P2);
+    delay(del);
+    LimpiarMatriz();
+    estado = 1;
+  }
+
+  else if (estado == 1) { 
+    mostrarCaracterDriver(PR);
+    mostrarCaracter(P1);
+    delay(del);
+    LimpiarMatriz();
+    estado = 0;
+  }
+
+  else if (estado == 0) { 
+    mostrarCaracterDriver(P2);
+    mostrarCaracter(ESPACIO);
+    delay(del);
+    LimpiarMatriz();
+    estado = 36;
+  }
+
+  }
 
 
 
