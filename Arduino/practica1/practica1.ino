@@ -5,7 +5,7 @@
 //// MOdificado
 
 LedControl lc = LedControl(51, 52, 53, 1);
-
+long unsigned int contabilidad=0;
 // Inicio variables para texto --- Agregado Gerson --------------------------------------------------------
 int fil[] = {22, 23, 24, 25, 26, 27, 28, 29}; // Filas
 int col[] = {32, 33, 34, 35, 36, 37, 38, 39}; // Columnas
@@ -139,8 +139,14 @@ void crearEnemigo() {
     if (!enemigosOcupanEspacio[idEnemigo]) {
       if (idEnemigo != 0) {
         if (enemigosVivos[idEnemigo - 1].coordY < 12) {
-          enemigosOcupanEspacio[idEnemigo] = true;
-          enemigosVivos[idEnemigo] = enemigo;
+          if (millis()-contabilidad>=5000) {
+            enemigosOcupanEspacio[idEnemigo] = true;
+            contabilidad=0;
+            contabilidad = millis();
+            enemigosVivos[idEnemigo] = enemigo;
+          }
+          
+          
         }
       } else {
         enemigosOcupanEspacio[idEnemigo] = true;
@@ -205,15 +211,15 @@ void dibujarEnemigos() {
         cuadriculaActual[0] = cuadriculaActual[0] | (B01000000 >> enemigo.coordX - 1);
       } else {
         if (enemigo.coordY == 14) {
-          cuadriculaActual[0] = cuadriculaActual[0] | (B11100000 >> enemigo.coordX - 1);
-          cuadriculaActual[1] = cuadriculaActual[1] | (B01000000 >> enemigo.coordX - 1);
+          cuadriculaActual[0] = cuadriculaActual[0] | (B01000000 >> enemigo.coordX - 1);
+          cuadriculaActual[1] = cuadriculaActual[1] | (B11100000 >> enemigo.coordX - 1);
         } else {
           if (enemigo.coordY == -1) {
-            cuadriculaActual[14] = cuadriculaActual[14] | (B01000000 >> enemigo.coordX - 1);
-            cuadriculaActual[15] = cuadriculaActual[15] | (B11100000 >> enemigo.coordX - 1);
+            cuadriculaActual[14] = cuadriculaActual[14] | (B11100000 >> enemigo.coordX - 1);
+            cuadriculaActual[15] = cuadriculaActual[15] | (B01000000 >> enemigo.coordX - 1);
           } else {
             if (enemigo.coordY == -2) {
-              cuadriculaActual[15] = cuadriculaActual[15] | (B01000000 >> enemigo.coordX - 1);
+              cuadriculaActual[15] = cuadriculaActual[15] | (B11100000 >> enemigo.coordX - 1); // es tope del tablero---
             } else {
               cuadriculaActual[13 - enemigo.coordY] = cuadriculaActual[13 - enemigo.coordY] | (B11100000 >> enemigo.coordX - 1);
               cuadriculaActual[14 - enemigo.coordY] = cuadriculaActual[14 - enemigo.coordY] | (B01000000 >> enemigo.coordX - 1);
