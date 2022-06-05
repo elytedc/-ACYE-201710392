@@ -1,6 +1,6 @@
 #include <LedControl.h>
-#include "numeros.h"
 #include "letras.h"
+#include "numeros.h"
 
 //// MOdificado
 
@@ -10,10 +10,11 @@ LedControl lc = LedControl(51, 52, 53, 1);
 int fil[] = {22, 23, 24, 25, 26, 27, 28, 29}; // Filas
 int col[] = {32, 33, 34, 35, 36, 37, 38, 39}; // Columnas
 
+int esta=0;
 int pot = A4; // Lee el potenciometro
 int pot2 = A5; // Lee el potenciometro para el juego
 int switchPresionado = 47; // Lee el switch
-int estado = 36;
+int estado = 0;
 int boton; // guarda el estado del switch (presionado o no)
 int del;   // guarda el valor del potenciomatro para hacer que el texto se traslade rapido/lento (delay)
 // Fin variables para texto -----------------------------------------------------------
@@ -50,9 +51,224 @@ const int MAX_NUMERO_DE_ENEMIGOS = 55;
 const int TODOS_LOS_ENEMIGOS_HAN_SIDO_USADOS = -1;
 
 
-void setup() {
+// NAVE ----------------------------------------------------------------------------------
+class Nave {
+  public:
+    int coordX, velMov, velDisparo, score[2]; // [0]: Decenas, [1]; Unidades
 
-Serial.begin(9600);
+    bool puedeMovIzq();
+    bool puedeMovDer();
+    //bool puedeDisparar();
+
+    bool estaTocandoCoordenadas(int, int); // x, y
+
+    void moverseIzq();
+    void moverseDer();
+    //void disparar();
+
+  private:
+    long unsigned int tiempoUltimoMov;
+    //long unsigned int tiempoUltimoDisparo;
+};
+
+bool Nave::puedeMovIzq() {
+  return (coordX > 1 && (millis() - tiempoUltimoMov) > velMov);
+}
+
+bool Nave::puedeMovDer() {
+  return (coordX < 6 && (millis() - tiempoUltimoMov) > velMov);
+}
+
+
+
+bool Nave::estaTocandoCoordenadas(int x, int y) {
+  bool estaTocandoLadoDer = ((x == coordX + 1) && (y == 0));
+  bool estaTocandoLadoIzq = ((x == coordX - 1) && (y == 0));
+  bool estaTocandoLadoFrontal = ((x == coordX) && (y == 1));
+  return (estaTocandoLadoDer || estaTocandoLadoIzq  || estaTocandoLadoFrontal);
+}
+
+void Nave::moverseIzq() {
+  if (coordX > 1) {
+    coordX -= 1;
+  }
+  tiempoUltimoMov = millis();
+}
+
+void Nave::moverseDer() {
+  if (coordX < 6) {
+    coordX += 1;
+  }
+  tiempoUltimoMov = millis();
+}
+
+
+
+Nave nave;
+
+
+// ENEMIGO ----------------------------------------------------------------------------------
+class Enemigo {
+  public:
+    int coordX, coordY = 15, velMov = 2000; //Debe ser en una funcion
+
+    bool puedeMoverse();
+    void moverse();
+    //void actvel();
+
+  private:
+    long unsigned int tiempoUltimoMov = 0;
+};
+
+bool Enemigo::puedeMoverse() {
+  return (millis() - tiempoUltimoMov) > velMov;
+}
+
+Enemigo enemigosVivos[MAX_NUMERO_DE_ENEMIGOS] = {};
+bool enemigosOcupanEspacio[MAX_NUMERO_DE_ENEMIGOS] = {};
+
+void Enemigo::moverse() {
+  coordY--;
+  tiempoUltimoMov = millis();
+}
+
+void crearEnemigo() {
+  Enemigo enemigo;
+  enemigo.coordX = random(6);
+  for (int idEnemigo = 0; idEnemigo < MAX_NUMERO_DE_ENEMIGOS; idEnemigo++) {
+    if (!enemigosOcupanEspacio[idEnemigo]) {
+      if (idEnemigo != 0) {
+        if (enemigosVivos[idEnemigo - 1].coordY < 12) {
+          enemigosOcupanEspacio[idEnemigo] = true;
+          enemigosVivos[idEnemigo] = enemigo;
+        }
+      } else {
+        enemigosOcupanEspacio[idEnemigo] = true;
+        enemigosVivos[idEnemigo] = enemigo;
+      }
+      break;
+    }
+  }
+}
+
+void actualizarVelEnemigo() {
+  for (int idEnemigo = 0; idEnemigo < MAX_NUMERO_DE_ENEMIGOS; idEnemigo++) {
+    if (enemigosOcupanEspacio[idEnemigo]) {
+      enemigosVivos[idEnemigo].velMov = analogRead(pot2) * 4;
+    }
+  }
+}
+
+// JUEGO ------------------------------------------------------------------------------------
+void dibujarCuadricula(byte * cuadricula) {
+  int contadorM2 = 7;
+  for (int i = 0; i < 16; i++) {
+    if (i < 8) {
+      digitalWrite(i + 32, HIGH);
+      for (int j = 7; j >= 0; j--) {
+        int a = cuadricula[i] >> j;
+        bool valor = a & 1;
+        if (valor) {
+          digitalWrite(j + 22, LOW);
+        } else {
+          digitalWrite(j + 22, HIGH);
+        }
+      }
+      delay(1);
+      digitalWrite(i + 32, LOW);
+      for (int j = 22; j < 30; j++) {
+        digitalWrite(j, HIGH);
+      }
+    } else {
+      lc.setColumn(0, contadorM2, cuadricula[i]);
+      contadorM2--;
+    }
+  }
+}
+
+void dibujarNave(int coord) {
+  cuadriculaActual[12] = cuadriculaActual[12] | (B01000000 >> coord - 1);
+  cuadriculaActual[13] = (B11100000 >> coord - 1);
+  cuadriculaActual[14] = (B01000000 >> coord - 1);
+  cuadriculaActual[15] = (B11100000 >> coord - 1);
+  // este es de 3 B11100000
+  // este es de 1 B01000000
+}
+
+
+
+void dibujarEnemigos() {
+  for (int idEnemigo = 0; idEnemigo < MAX_NUMERO_DE_ENEMIGOS; idEnemigo++) {
+    Enemigo enemigo = enemigosVivos[idEnemigo];
+    if (enemigosOcupanEspacio[idEnemigo]) {
+      if (enemigo.coordY == 15) {
+        cuadriculaActual[0] = cuadriculaActual[0] | (B01000000 >> enemigo.coordX - 1);
+      } else {
+        if (enemigo.coordY == 14) {
+          cuadriculaActual[0] = cuadriculaActual[0] | (B11100000 >> enemigo.coordX - 1);
+          cuadriculaActual[1] = cuadriculaActual[1] | (B01000000 >> enemigo.coordX - 1);
+        } else {
+          if (enemigo.coordY == -1) {
+            cuadriculaActual[14] = cuadriculaActual[14] | (B01000000 >> enemigo.coordX - 1);
+            cuadriculaActual[15] = cuadriculaActual[15] | (B11100000 >> enemigo.coordX - 1);
+          } else {
+            if (enemigo.coordY == -2) {
+              cuadriculaActual[15] = cuadriculaActual[15] | (B01000000 >> enemigo.coordX - 1);
+            } else {
+              cuadriculaActual[13 - enemigo.coordY] = cuadriculaActual[13 - enemigo.coordY] | (B11100000 >> enemigo.coordX - 1);
+              cuadriculaActual[14 - enemigo.coordY] = cuadriculaActual[14 - enemigo.coordY] | (B01000000 >> enemigo.coordX - 1);
+              cuadriculaActual[15 - enemigo.coordY] = cuadriculaActual[15 - enemigo.coordY] | (B11100000 >> enemigo.coordX - 1);
+            }
+          }
+        }
+      }
+      if (enemigo.puedeMoverse()) {
+        enemigosVivos[idEnemigo].moverse();
+        if (enemigosVivos[idEnemigo].coordY + 2 < 0) {
+          enemigosOcupanEspacio[idEnemigo] = false;
+        }
+      }
+    }
+  }
+}
+
+bool estaPresionado(int idBtn) {
+  int estadoBtn = digitalRead(idBtn);
+  return (estadoBtn == HIGH);
+}
+
+void verificarEnemigoTocaNave() {
+  for (int idEnemigo = 0; idEnemigo < MAX_NUMERO_DE_ENEMIGOS; idEnemigo++) {
+    Enemigo enemigo = enemigosVivos[idEnemigo];
+    bool tocaDer = nave.estaTocandoCoordenadas(enemigo.coordX - 1, enemigo.coordY + 1);
+    bool tocaIzq = nave.estaTocandoCoordenadas(enemigo.coordX + 1, enemigo.coordY + 1);
+    bool tocaFrente = nave.estaTocandoCoordenadas(enemigo.coordX, enemigo.coordY);
+    if (enemigosOcupanEspacio[idEnemigo] && (tocaDer || tocaIzq || tocaFrente)) {
+      reiniciarJuego();
+    }
+  }
+}
+
+
+
+void reiniciarJuego() {
+  GAME_OVER = true;
+  dibujarCuadricula(cuadriculaLimpia);
+  nave.coordX = 3;
+  nave.velMov = 50;
+  nave.velDisparo = 200;
+  unidad = 0;
+  decena = 0;
+  // Enemigos
+  for (int idEnemigo = 0; idEnemigo < MAX_NUMERO_DE_ENEMIGOS; idEnemigo++) {
+    enemigosOcupanEspacio[idEnemigo] = false;
+  }
+}
+
+// SETUP ------------------------------------------------------------------------------------
+void setup() {
+  Serial.begin(9600);
+
   //inicializamos driver
   lc.shutdown(0, false); //inicia apagado - dispositivo 1
   lc.setIntensity(0, 15);
@@ -70,24 +286,87 @@ Serial.begin(9600);
   }
 
   pinMode(switchPresionado, INPUT);
+
+  reiniciarJuego();
 }
 
 void loop() {
+  //Serial.println(analogRead(btnStart));
 
-DES();
+  if (!GAME_OVER) {
+    // PAUSA 
+    if (analogRead(btnStart) == 0) {
+      //imprimir_conteo();
+      //imprimir_sindriver_conteo();
+      esta=0;
+    } else {
+      if (nave.puedeMovIzq()) {
+        if (!estaPresionado(btnIzq) ) {
+          btnIzqPres = true;
+        }
+        if (estaPresionado(btnIzq) && btnIzqPres) {
+          nave.moverseIzq();
+          btnIzqPres = false;
+        }
+      }
+      if (nave.puedeMovDer()) {
+        if (!estaPresionado(btnDer) ) {
+          btnDerPres = true;
+        }
+        if (estaPresionado(btnDer) && btnDerPres) {
+          nave.moverseDer();
+          btnDerPres = false;
+        }
+      }
+//      if (nave.puedeDisparar()) {
+//        if (!estaPresionado(btnDisparo) ) {
+//          btnDisparoPres = true;
+//        }
+//        if (estaPresionado(btnDisparo) && btnDisparoPres) {
+//          nave.disparar();
+//          btnDisparoPres = false;
+//        }
+//      }
+
+      crearEnemigo();
+      actualizarVelEnemigo();
+
+      memcpy(cuadriculaActual, cuadriculaLimpia, 16);
+
+      dibujarNave(nave.coordX);
+      dibujarEnemigos();
+      dibujarCuadricula(cuadriculaActual);
+      //verificarEnemigoTocaNave();
+      //verificarProyectilTocaEnemigo();
+    }
+  } else {
 
 
+
+    if (estaPresionado(btnStart)) {
+      GAME_OVER = false;
+    }
+
+
+    else {
+      boton = digitalRead(switchPresionado);
+      del = analogRead(pot);
+      if (boton == 1) {
+        AS(); 
+      } else {
+        DES(); 
+      }
+    }
+    delay(250);
+
+  }
 }
 
-bool estaPresionado(int idBtn) {
-  int estadoBtn = digitalRead(idBtn);
-  return (estadoBtn == HIGH);
-}
 
 
 
 
-void ASC() {
+void AS() {
 
   if (estado == 0) {
     //mostrarCaracter(ASTERISCO);
@@ -730,7 +1009,7 @@ void LimpiarMatriz() {
 
 
 
-void mostrarCaracter(int letra[8][8]) {
+void mostrarCaracter(int letras[8][8]) {
   //int fil_aux=0;
   int col_aux = 7;
   for (int repe = 0; repe < 30; repe++) {
@@ -738,7 +1017,7 @@ void mostrarCaracter(int letra[8][8]) {
       //digitalWrite(fil[i],LOW);
       digitalWrite(col[i], HIGH);
       for (int j = 0; j < 8; j++) {
-        if (letra[i][j] == 1) {
+        if (letras[i][j] == 1) {
           //digitalWrite(fil[j], HIGH);
           digitalWrite(fil[col_aux], LOW);
         }
@@ -760,12 +1039,12 @@ void mostrarCaracter(int letra[8][8]) {
 
 
 
-void mostrarCaracterDriver(int letra[8][8]) {
+void mostrarCaracterDriver(int letras[8][8]) {
   int fil_aux = 0;
   int col_aux = 7;
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
-      lc.setLed(0, fil_aux, col_aux, letra[i][j]);
+      lc.setLed(0, fil_aux, col_aux, letras[i][j]);
       fil_aux++;
     }
     fil_aux = 0;
