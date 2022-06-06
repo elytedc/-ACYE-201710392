@@ -5,12 +5,15 @@
 //// MOdificado
 
 LedControl lc = LedControl(51, 52, 53, 1);
+const int button3Pin = 3;
 long unsigned int contabilidad=0;
-// Inicio variables para texto --- Agregado Gerson --------------------------------------------------------
+int contando=0;
+unsigned long tiempo;
+unsigned long tiempo2;
+unsigned long tiempo3;
+ int button3State = 0; 
 int fil[] = {22, 23, 24, 25, 26, 27, 28, 29}; // Filas
 int col[] = {32, 33, 34, 35, 36, 37, 38, 39}; // Columnas
-
-int esta=0;
 int pot = A4; // Lee el potenciometro
 int pot2 = A5; // Lee el potenciometro para el juego
 int switchPresionado = 47; // Lee el switch
@@ -18,9 +21,10 @@ int estado = 0;
 int boton; // guarda el estado del switch (presionado o no)
 int del;   // guarda el valor del potenciomatro para hacer que el texto se traslade rapido/lento (delay)
 // Fin variables para texto -----------------------------------------------------------
+bool juegopausa = false;
 bool pausa = false;
-int unidad = 5;
-int decena = 5;
+int unidad = 1;
+int decena = 1;
 int columnas[] = {22, 23, 24, 25, 26, 27, 28, 29};
 int filas[] = {32, 33, 34, 35, 36, 37, 38, 39};
 
@@ -209,6 +213,7 @@ void dibujarEnemigos() {
     if (enemigosOcupanEspacio[idEnemigo]) {
       if (enemigo.coordY == 15) {
         cuadriculaActual[0] = cuadriculaActual[0] | (B01000000 >> enemigo.coordX - 1);
+        contando=0;
       } else {
         if (enemigo.coordY == 14) {
           cuadriculaActual[0] = cuadriculaActual[0] | (B01000000 >> enemigo.coordX - 1);
@@ -220,6 +225,15 @@ void dibujarEnemigos() {
           } else {
             if (enemigo.coordY == -2) {
               cuadriculaActual[15] = cuadriculaActual[15] | (B11100000 >> enemigo.coordX - 1); // es tope del tablero---
+              contando++;
+              if(contando==1){
+                unidad++;
+                if(unidad==10){
+                decena++;
+                unidad=0;
+              }
+              }
+              
                     
             } else {
               cuadriculaActual[13 - enemigo.coordY] = cuadriculaActual[13 - enemigo.coordY] | (B11100000 >> enemigo.coordX - 1);
@@ -251,6 +265,21 @@ void verificarEnemigoTocaNave() {
     bool tocaIzq = nave.estaTocandoCoordenadas(enemigo.coordX + 1, enemigo.coordY + 1);
     bool tocaFrente = nave.estaTocandoCoordenadas(enemigo.coordX, enemigo.coordY);
     if (enemigosOcupanEspacio[idEnemigo] && (tocaDer || tocaIzq || tocaFrente)) {
+      if(decena==0){conteosindriver(CERO); }
+  else if(decena==1){conteosindriver(UNO); }
+  else if(decena==2){conteosindriver(DOS); }
+  delay(100);
+  if(unidad==0){conteocondriver(CERO); }
+  else if(unidad==1){conteocondriver(UNO); }
+  else if(unidad==2){conteocondriver(DOS); }
+  else if(unidad==3){conteocondriver(TRES); }
+  else if(unidad==4){conteocondriver(CUATRO); }
+  else if(unidad==5){conteocondriver(CINCO); }
+  else if(unidad==6){conteocondriver(SEIS); }
+  else if(unidad==7){conteocondriver(SIETE); }
+  else if(unidad==8){conteocondriver(OCHO); }
+  else if(unidad==9){conteocondriver(NUEVE); }
+  delay(6000);
       reiniciarJuego();
     }
   }
@@ -291,21 +320,43 @@ void setup() {
     digitalWrite(fil[i], HIGH);
     digitalWrite(col[i], LOW);
   }
-
+  pinMode(button3Pin, INPUT); 
   pinMode(switchPresionado, INPUT);
 
   reiniciarJuego();
 }
 
 void loop() {
+    //LimpiarMatriz();
+ // imprimir_conteo();
+   //   imprimir_sindriver_conteo();
   //Serial.println(analogRead(btnStart));
-
+//
   if (!GAME_OVER) {
     // PAUSA 
-    if (analogRead(btnStart) == 0) {
-      imprimir_conteo();
-      imprimir_sindriver_conteo();
-      esta=0;
+
+    if (juegopausa==true) {
+  if(decena==0){conteosindriver(CERO); }
+  else if(decena==1){conteosindriver(UNO); }
+  else if(decena==2){conteosindriver(DOS); }
+  
+  if(unidad==0){conteocondriver(CERO); }
+  else if(unidad==1){conteocondriver(UNO); }
+  else if(unidad==2){conteocondriver(DOS); }
+  else if(unidad==3){conteocondriver(TRES); }
+  else if(unidad==4){conteocondriver(CUATRO); }
+  else if(unidad==5){conteocondriver(CINCO); }
+  else if(unidad==6){conteocondriver(SEIS); }
+  else if(unidad==7){conteocondriver(SIETE); }
+  else if(unidad==8){conteocondriver(OCHO); }
+  else if(unidad==9){conteocondriver(NUEVE); }
+    if (estaPresionado(btnStart)) {
+      juegopausa=false;
+      delay(800);
+      
+    }
+
+    
     } else {
       if (nave.puedeMovIzq()) {
         if (!estaPresionado(btnIzq) ) {
@@ -344,18 +395,54 @@ void loop() {
       dibujarEnemigos();
       dibujarCuadricula(cuadriculaActual);
       verificarEnemigoTocaNave();
-      //verificarProyectilTocaEnemigo();
+      if(decena==1 && unidad==2){
+        
+        GAME_OVER=true;
+        reiniciarJuego();
+        win();
+      }
+      
+      if (estaPresionado(btnStart)) {
+juegopausa=true;
+
+        
+        
+       }
     }
   } else {
 
 
 
     if (estaPresionado(btnStart)) {
-      GAME_OVER = false;
-    }
+  tiempo=millis();
+
+while(analogRead(btnStart)==1) {
+    tiempo2=millis();
+  }
+tiempo3=tiempo2-tiempo;
+
+  if (tiempo3 >= 4000){ //comprueba el estado del boton Codigo para diferenciar pulsacion corta ->>   pulsacion larga ->> 
+ GAME_OVER = false;  
+ delay(500);
+}
 
 
-    else {
+
+
+
+
+
+
+
+
+
+
+
+
+    }else {
+        if (tiempo3 >= 4000){ //comprueba el estado del boton Codigo para diferenciar pulsacion corta ->>   pulsacion larga ->> 
+ GAME_OVER = false;  
+}
       boton = digitalRead(switchPresionado);
       del = analogRead(pot);
       if (boton == 1) {
@@ -1060,102 +1147,80 @@ void mostrarCaracterDriver(int letras[8][8]) {
 }
 
 
-void imprimir_sindriver_conteo() {
-  for (int columna = 0; columna < 8; columna++) {
-    //digitalWrite(filas[columna],HIGH);
-    for (int fila = 0; fila < 8; fila++) {
-      if (molde[columna][fila] == 1) {
-        digitalWrite(columnas[fila], LOW);
+
+void conteosindriver(int letras[8][8]) {
+  //int fil_aux=0;
+  int col_aux = 7;
+  for (int repe = 0; repe < 30; repe++) {
+    for (int i = 0; i < 8; i++) {
+      //digitalWrite(fil[i],LOW);
+      digitalWrite(col[i], HIGH);
+      for (int j = 0; j < 8; j++) {
+        if (letras[i][j] == 1) {
+          //digitalWrite(fil[j], HIGH);
+          digitalWrite(fil[col_aux], LOW);
+        }
+        col_aux--;
       }
-    }
-    delay(4);
-    digitalWrite(filas[columna], LOW);
-    for (int j = 0; j < 8; j++) {
-      digitalWrite(columnas[j], HIGH);
+      col_aux = 7;
+      delay(1);
+      //digitalWrite(fil[i],HIGH);
+      digitalWrite(col[i], LOW);
+      for (int j = 0; j < 8; j++) {
+        //digitalWrite(col[j],LOW);
+        digitalWrite(fil[j], HIGH);
+      }
     }
   }
 }
 
 
-void imprimir_conteo() {
-  for (int fila = 0; fila < 8; fila++) {
-    digitalWrite(filas[fila], HIGH);
-    for (int columna = 0; columna < 8; columna++) {
-      if (decena == 1) {
-        molde[columna][fila] = m1[columna][fila];
-      }
-
-      if (decena == 2) {
-        molde[columna][fila] = m2[columna][fila];
-      }
-
-      if (decena == 3) {
-        molde[columna][fila] = m3[columna][fila];
-      }
-      if (decena == 4) {
-        molde[columna][fila] = m4[columna][fila];
-      }
-
-      if (decena == 5) {
-        molde[columna][fila] = m5[columna][fila];
-      }
-
-      if (decena == 6) {
-        molde[columna][fila] = m6[columna][fila];
-      }
-
-      if (decena == 7) {
-        molde[columna][fila] = m7[columna][fila];
-      }
-
-      if (decena == 8) {
-        molde[columna][fila] = m8[columna][fila];
-      }
-
-      if (decena == 9) {
-        molde[columna][fila] = m9[columna][fila];
-      }
-
-      if (decena == 0) {
-        molde[columna][fila] = m0[columna][fila];
-      }
-
-      if (unidad == 0) {
-        lc.setLed(0, fila, columna, n0[columna][fila]);
-      }
-      if (unidad == 1) {
-        lc.setLed(0, fila, columna, n1[columna][fila]);
-      }
-      if (unidad == 2) {
-        lc.setLed(0, fila, columna, n2[columna][fila]);
-      }
-      if (unidad == 3) {
-        lc.setLed(0, fila, columna, n3[columna][fila]);
-      }
-      if (unidad == 4) {
-        lc.setLed(0, fila, columna, n4[columna][fila]);
-      }
-      if (unidad == 5) {
-        lc.setLed(0, fila, columna, n5[columna][fila]);
-      }
-      if (unidad == 6) {
-        lc.setLed(0, fila, columna, n6[columna][fila]);
-      }
-      if (unidad == 7) {
-        lc.setLed(0, fila, columna, n7[columna][fila]);
-      }
-      if (unidad == 8) {
-        lc.setLed(0, fila, columna, n8[columna][fila]);
-      }
-      if (unidad == 9) {
-        lc.setLed(0, fila, columna, n9[columna][fila]);
-      }
+void conteocondriver(int letras[8][8]) {
+  int fil_aux = 0;
+  int col_aux = 7;
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      lc.setLed(0, fil_aux, col_aux, letras[i][j]);
+      fil_aux++;
     }
+    fil_aux = 0;
+    col_aux--;
   }
+}
 
 
 
 
 
+
+void win() {
+LimpiarMatriz();
+ 
+    mostrarCaracterDriver(W1);
+    mostrarCaracter(ESPACIO);
+    delay(800);
+    LimpiarMatriz();
+
+    mostrarCaracterDriver(I1);
+    mostrarCaracter(W1);
+    delay(800);
+    LimpiarMatriz();
+    
+    mostrarCaracterDriver(N1);
+    mostrarCaracter(I1);
+    delay(800);
+    LimpiarMatriz();
+    
+    mostrarCaracterDriver(ESPACIO);
+    mostrarCaracter(N1);
+    delay(800);
+    LimpiarMatriz();
+
+    mostrarCaracterDriver(ESPACIO);
+    mostrarCaracter(ESPACIO);
+    delay(800);
+    LimpiarMatriz();
+    
+    
 
 }
